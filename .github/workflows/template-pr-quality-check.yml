@@ -1,0 +1,54 @@
+name: Quality Check On PR
+
+on:
+    workflow_dispatch:
+    workflow_call:
+
+jobs:
+    quality-check-on-pr:
+        runs-on: [ubuntu-latest]
+        if: "!startsWith(github.head_ref, 'dependabot/')"
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                  python-version: "3.9"
+
+            - name: Install dev dependencies
+              run: |
+                  pip install -U wheel setuptools pip
+                  pip install poetry
+                  poetry install
+
+            - name: Run coverage
+              env:
+                  VOLUME_MOUNT_PATH: ${{ runner.temp }}
+              run: poetry run coverage run -m pytest -p no:warnings --junitxml=junit.xml --cov=. --cov-report html --cov-report xml | tee .coverage.ci.log
+
+            - name: Comment Code Coverage For Changes
+              id: coverage-comment
+              uses: MishaKav/pytest-coverage-comment@main
+              with:
+                  pytest-xml-coverage-path: ./coverage.xml
+                  junitxml-path: ./junit.xml
+                  report-only-changed-files: true
+
+            - name: Get Repository Name
+              id: github-repo-name
+              run: |
+                  echo "reponame=${GITHUB_REPOSITORY#*/}" >> $GITHUB_OUTPUT
+
+            - name: Fail if unit test got failure
+              run: |
+                  echo "Coverage Errors - ${{ steps.coverage-comment.outputs.errors }}"
+                  echo "Coverage Failures - ${{ steps.coverage-comment.outputs.failures }}"
+                  test_errors=${{ steps.coverage-comment.outputs.errors }}
+                  test_failures=${{ steps.coverage-comment.outputs.failures }}
+                  if (( ${test_errors} > 0 )); then
+                      echo "✖ Tests has ERRORS."; exit 1;
+                  fi
+                  if (( ${test_failures} > 0 )); then
+                      echo "✖ Tests has FAILED."; exit 1;
+                  fi
