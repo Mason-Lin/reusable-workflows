@@ -31,27 +31,18 @@ jobs:
                   commit_user_email: pizza0117@gmail.com
                   commit_author: Mason Lin <pizza0117@gmail.com>
 
-    docker-build-linter:
+    docker-build-checks:
         if: "!startsWith(github.head_ref, 'dependabot/')"
         runs-on: [ubuntu-latest]
         steps:
             - uses: actions/checkout@v4
+
             - name: Linter
               run: docker build --target=dev-linter -t docker_name:dev-linter .
 
-    docker-build-coverage:
-        if: "!startsWith(github.head_ref, 'dependabot/')"
-        runs-on: [ubuntu-latest]
-        steps:
-            - uses: actions/checkout@v4
             - name: Coverage
               run: docker build --target=dev-coverage -t docker_name:dev-coverage .
 
-    docker-build-security:
-        if: "!startsWith(github.head_ref, 'dependabot/')"
-        runs-on: [ubuntu-latest]
-        steps:
-            - uses: actions/checkout@v4
             - name: Security
               run: docker build --target=dev-security -t docker_name:dev-security .
 
