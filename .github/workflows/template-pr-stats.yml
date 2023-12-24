@@ -1,0 +1,20 @@
+name: Pull Request Stats
+
+on:
+    workflow_dispatch:
+    workflow_call:
+
+jobs:
+    pr-stats:
+        runs-on: [ubuntu-latest]
+        permissions:
+            contents: read
+            pull-requests: write
+        steps:
+            - name: Run pull request stats
+              uses: flowwer-dev/pull-request-stats@master
+              with:
+                  charts: true
+                  disable-links: true
+                  sort-by: "COMMENTS"
+                  period: 365
