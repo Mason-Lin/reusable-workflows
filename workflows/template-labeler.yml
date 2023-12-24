@@ -1,0 +1,20 @@
+name: Pull Request Labeler
+on:
+    workflow_call:
+
+jobs:
+    pr-labeler:
+        permissions:
+            contents: read
+            pull-requests: write
+        runs-on: [ubuntu-latest]
+        steps:
+            - uses: actions/checkout@v4
+            #   with:
+            #       lfs: true
+            #       submodules: "recursive"
+            #       token: ${{secrets.ACTIONS_BOT_TOKEN}}
+
+            - uses: actions/labeler@v4
+              with:
+                  sync-labels: true

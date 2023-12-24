@@ -1,0 +1,17 @@
+name: Sprint Release
+
+on:
+    workflow_call:
+
+jobs:
+    sprint-release:
+        permissions:
+            contents: write
+        runs-on: [ubuntu-latest]
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+            - name: Release
+              uses: softprops/action-gh-release@v1
+              with:
+                  generate_release_notes: true
