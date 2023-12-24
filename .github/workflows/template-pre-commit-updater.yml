@@ -30,7 +30,7 @@ jobs:
               id: cpr
               uses: peter-evans/create-pull-request@v5
               with:
-                  token: ${{ secrets.ACTIONS_BOT_TOKEN }}
+                  # token: ${{ secrets.ACTIONS_BOT_TOKEN }}
                   branch: update/pre-commit-autoupdate
                   title: 👌 Auto-update pre-commit hooks
                   commit-message: 👌 Auto-update pre-commit hooks
