@@ -1,6 +1,6 @@
 # reusable-workflows
 
-This place collects reusable workflows
+This place collects reusable workflows.
 
 # Usage
 
