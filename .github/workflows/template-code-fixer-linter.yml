@@ -55,7 +55,7 @@ jobs:
                   python-version: "3.9"
 
             - name: Install codespell
-              run: pip install codespell[tomli]
+              run: pip install codespell tomli
 
             - name: Run codespell
               run: |
